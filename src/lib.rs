@@ -83,6 +83,10 @@
 //! # }
 //! ```
 
+#![cfg_attr(all(feature = "mesalock_sgx",
+                not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
+
 #[cfg(feature = "alloc")]
 #[macro_use]
 extern crate alloc;
@@ -90,6 +94,9 @@ extern crate alloc;
 use self::alloc::vec::*;
 
 use core::{fmt, mem, slice};
+
+#[cfg(all(feature = "std", not(target_env = "sgx")))]
+use sgx_tstd as std;
 
 #[cfg(feature = "std")]
 use std::error::Error as StdError;
